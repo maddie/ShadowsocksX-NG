@@ -33,7 +33,7 @@ From [here](https://github.com/shadowsocks/ShadowsocksX-NG/releases/)
 
 ## Fetures
 
-- Use ss-local from shadowsocks-libev 2.5.6
+- Use ss-local from shadowsocks-libev 3.0.0
 - Could Update PAC by download GFW List from GitHub.
 - Show QRCode for current server profile.
 - Scan QRCode from screen.
