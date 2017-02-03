@@ -23,8 +23,6 @@ class PreferencesWindowController: NSWindowController
     @IBOutlet weak var passwordTextField: NSTextField!
     @IBOutlet weak var remarkTextField: NSTextField!
     
-    @IBOutlet weak var otaCheckBoxBtn: NSButton!
-    
     @IBOutlet weak var kcptunCheckBoxBtn: NSButton!
     @IBOutlet weak var kcptunCryptComboBox: NSComboBox!
     @IBOutlet weak var kcptunKeyTextField: NSTextField!
@@ -54,6 +52,9 @@ class PreferencesWindowController: NSWindowController
             "aes-128-cfb",
             "aes-192-cfb",
             "aes-256-cfb",
+            "aes-128-gcm",
+            "aes-192-gcm",
+            "aes-256-gcm",
             "des-cfb",
             "bf-cfb",
             "camellia-128-cfb",
@@ -65,7 +66,9 @@ class PreferencesWindowController: NSWindowController
             "rc4-md5",
             "seed-cfb",
             "chacha20",
+            "chacha20-poly1305",
             "chacha20-ietf",
+            "chacha20-ietf-poly1305",
             "salsa20",
             "rc4",
             "table",
@@ -217,9 +220,7 @@ class PreferencesWindowController: NSWindowController
             
             remarkTextField.bind("value", to: editingProfile, withKeyPath: "remark"
                 , options: [NSContinuouslyUpdatesValueBindingOption: true])
-            
-            otaCheckBoxBtn.bind("value", to: editingProfile, withKeyPath: "ota"
-                , options: [NSContinuouslyUpdatesValueBindingOption: true])
+
             
             // --------------------------------------------------
             // Kcptun
@@ -257,8 +258,6 @@ class PreferencesWindowController: NSWindowController
             passwordTextField.unbind("value")
             
             remarkTextField.unbind("value")
-            
-            otaCheckBoxBtn.unbind("value")
             
             kcptunCheckBoxBtn.unbind("value")
         }

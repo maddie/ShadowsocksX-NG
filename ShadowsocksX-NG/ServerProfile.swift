@@ -18,7 +18,6 @@ class ServerProfile: NSObject, NSCopying {
     var method:String = "aes-128-cfb"
     var password:String = ""
     var remark:String = ""
-    var ota: Bool = false // onetime authentication
     
     var enabledKcptun: Bool = false
     var kcptunProfile = KcptunProfile()
@@ -77,10 +76,6 @@ class ServerProfile: NSObject, NSCopying {
 
         remark = parsedUrl.queryItems?
             .filter({ $0.name == "Remark" }).first?.value ?? ""
-        if let otaStr = parsedUrl.queryItems?
-            .filter({ $0.name == "OTA" }).first?.value {
-            ota = NSString(string: otaStr).boolValue
-        }
         if let enabledKcptunStr = parsedUrl.queryItems?
             .filter({ $0.name == "Kcptun" }).first?.value {
             enabledKcptun = NSString(string: enabledKcptunStr).boolValue
@@ -100,7 +95,6 @@ class ServerProfile: NSObject, NSCopying {
         copy.method = self.method
         copy.password = self.password
         copy.remark = self.remark
-        copy.ota = self.ota
         return copy;
     }
     
@@ -113,9 +107,6 @@ class ServerProfile: NSObject, NSCopying {
             profile.password = data["Password"] as! String
             if let remark = data["Remark"] {
                 profile.remark = remark as! String
-            }
-            if let ota = data["OTA"] {
-                profile.ota = ota as! Bool
             }
             if let enabledKcptun = data["EnabledKcptun"] {
                 profile.enabledKcptun = enabledKcptun as! Bool
@@ -144,7 +135,6 @@ class ServerProfile: NSObject, NSCopying {
         d["Method"] = method as AnyObject?
         d["Password"] = password as AnyObject?
         d["Remark"] = remark as AnyObject?
-        d["OTA"] = ota as AnyObject?
         d["EnabledKcptun"] = NSNumber(value: enabledKcptun)
         d["KcptunProfile"] = kcptunProfile.toDictionary() as AnyObject
         return d
@@ -158,7 +148,6 @@ class ServerProfile: NSObject, NSCopying {
         conf["local_port"] = NSNumber(value: UInt16(defaults.integer(forKey: "LocalSocks5.ListenPort")) as UInt16)
         conf["local_address"] = defaults.string(forKey: "LocalSocks5.ListenAddress") as AnyObject?
         conf["timeout"] = NSNumber(value: UInt32(defaults.integer(forKey: "LocalSocks5.Timeout")) as UInt32)
-        conf["auth"] = NSNumber(value: ota as Bool)
         
         if enabledKcptun {
             let localHost = defaults.string(forKey: "Kcptun.LocalHost")
@@ -227,8 +216,8 @@ class ServerProfile: NSObject, NSCopying {
         url.password = password
         url.port = Int(serverPort)
 
-        url.queryItems = [URLQueryItem(name: "Remark", value: remark),
-                          URLQueryItem(name: "OTA", value: ota.description)]
+        url.queryItems = [URLQueryItem(name: "Remark", value: remark)]
+        
         if enabledKcptun {
             url.queryItems?.append(contentsOf: [
                 URLQueryItem(name: "Kcptun", value: enabledKcptun.description),
